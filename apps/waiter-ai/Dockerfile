@@ -1,20 +1,20 @@
 FROM node:20-alpine AS deps
-WORKDIR /repo
+WORKDIR /app
 
-COPY package.json package-lock.json ./
-COPY apps/waiter-ai/package.json apps/waiter-ai/package.json
-COPY packages ./packages
-RUN npm ci
+COPY package.json ./
+RUN npm install
 
 FROM node:20-alpine AS build
-WORKDIR /repo
-COPY --from=deps /repo /repo
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npx turbo run build --filter=waiter-ai...
+RUN npm run build
 
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-COPY --from=build /repo/apps/waiter-ai ./
-EXPOSE 3000
+
+COPY --from=build /app ./
+
+EXPOSE 3002
 CMD ["npm","run","start"]
