@@ -1,0 +1,110 @@
+[
+  {
+    "id": "ord_a53e288c9249d_1766457151286",
+    "table": "12",
+    "createdAt": 1766457151286,
+    "status": "NEW",
+    "subtotal": 10470,
+    "lines": [
+      {
+        "id": "l1",
+        "name": "Hamburguesa clásica",
+        "qty": 1,
+        "unitPrice": 5990
+      },
+      {
+        "id": "l2",
+        "name": "Papas fritas",
+        "qty": 1,
+        "unitPrice": 2490
+      },
+      {
+        "id": "l3",
+        "name": "Bebida",
+        "qty": 1,
+        "unitPrice": 1990
+      }
+    ]
+  },
+  {
+    "id": "ord_60191cba0a6dc_1766445885985",
+    "table": "12",
+    "createdAt": 1766445885985,
+    "status": "DONE",
+    "subtotal": 10470,
+    "lines": [
+      {
+        "id": "l1",
+        "name": "Hamburguesa clásica",
+        "qty": 1,
+        "unitPrice": 5990
+      },
+      {
+        "id": "l2",
+        "name": "Papas fritas",
+        "qty": 1,
+        "unitPrice": 2490
+      },
+      {
+        "id": "l3",
+        "name": "Bebida",
+        "qty": 1,
+        "unitPrice": 1990
+      }
+    ]
+  },
+  {
+    "id": "ord_63500e8e84bc9_1766387501552",
+    "table": "",
+    "createdAt": 1766387501552,
+    "status": "DONE",
+    "subtotal": 10470,
+    "lines": [
+      {
+        "id": "l1",
+        "name": "Hamburguesa clásica",
+        "qty": 1,
+        "unitPrice": 5990
+      },
+      {
+        "id": "l2",
+        "name": "Papas fritas",
+        "qty": 1,
+        "unitPrice": 2490
+      },
+      {
+        "id": "l3",
+        "name": "Bebida",
+        "qty": 1,
+        "unitPrice": 1990
+      }
+    ]
+  },
+  {
+    "id": "ord_cf68e3b5e8aae_1766386122528",
+    "table": "",
+    "createdAt": 1766386122528,
+    "status": "DONE",
+    "subtotal": 10470,
+    "lines": [
+      {
+        "id": "l1",
+        "name": "Hamburguesa clásica",
+        "qty": 1,
+        "unitPrice": 5990
+      },
+      {
+        "id": "l2",
+        "name": "Papas fritas",
+        "qty": 1,
+        "unitPrice": 2490
+      },
+      {
+        "id": "l3",
+        "name": "Bebida",
+        "qty": 1,
+        "unitPrice": 1990
+      }
+    ]
+  }
+]

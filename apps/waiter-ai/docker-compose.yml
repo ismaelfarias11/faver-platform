@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: waiter_ai_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: waiter
+      POSTGRES_PASSWORD: waiter123
+      POSTGRES_DB: waiter_ai
+      POSTGRES_INITDB_ARGS: "--auth-host=md5 --auth-local=trust"
+    volumes:
+      - waiter_ai_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  waiter_ai_data:
+
