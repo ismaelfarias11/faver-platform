@@ -1,0 +1,67 @@
+services:
+  hub:
+    build:
+      context: ..
+      dockerfile: apps/hub/Dockerfile
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"
+      NEXT_TELEMETRY_DISABLED: "1"
+    expose:
+      - "3000"
+    restart: unless-stopped
+
+  kronos3d:
+    build:
+      context: ..
+      dockerfile: apps/kronos3d/Dockerfile
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"
+      NEXT_TELEMETRY_DISABLED: "1"
+    expose:
+      - "3000"
+    restart: unless-stopped
+
+  waiter-ai:
+    build:
+      context: ..
+      dockerfile: apps/waiter-ai/Dockerfile
+    environment:
+      NODE_ENV: production
+      PORT: "3002"
+      HOSTNAME: "0.0.0.0"
+      NEXT_TELEMETRY_DISABLED: "1"
+      # Si Prisma usa BD (Postgres/MySQL), define esto en EasyPanel (Entorno)
+      # DATABASE_URL: "postgresql://USER:PASSWORD@postgres:5432/waiter?schema=public"
+    expose:
+      - "3002"
+    restart: unless-stopped
+    # Si incluyes Postgres dentro de este compose, descomenta:
+    # depends_on:
+    #   postgres:
+    #     condition: service_healthy
+
+  # === OPCIONAL: Base de datos para waiter-ai (si necesitas Postgres) ===
+  # RECOMENDACIÓN: en EasyPanel puedes crear un servicio Postgres aparte.
+  # Si prefieres manejarlo aquí, descomenta postgres + volumes.
+  #
+  # postgres:
+  #   image: postgres:16-alpine
+  #   environment:
+  #     POSTGRES_DB: waiter
+  #     POSTGRES_USER: waiter
+  #     POSTGRES_PASSWORD: "CHANGE_ME"
+  #   volumes:
+  #     - pgdata:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U waiter -d waiter"]
+  #     interval: 5s
+  #     timeout: 3s
+  #     retries: 20
+  #   restart: unless-stopped
+
+# volumes:
+#   pgdata:
