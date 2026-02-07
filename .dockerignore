@@ -1,36 +1,13 @@
-# Git / metadata
-.git
-.gitignore
-.gitattributes
-
-# Node / package managers
 **/node_modules
-**/.pnp
-**/.pnp.js
+**/.next
+**/.turbo
+**/dist
+**/build
+**/out
+
+.git
+.env*
+.DS_Store
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-
-# Next / build outputs
-**/.next
-**/out
-**/build
-**/dist
-**/.vercel
-
-# Turbo cache
-**/.turbo
-
-# Env files (NO subirlos al build)
-**/.env
-**/.env.*
-!.env.example
-
-# OS / editor
-**/.DS_Store
-**/*.pem
-
-# Data / local artifacts (tú tienes .data en waiter-ai)
-apps/**/.data
-**/*.log

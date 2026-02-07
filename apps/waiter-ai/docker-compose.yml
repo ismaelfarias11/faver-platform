@@ -2,8 +2,6 @@ services:
   postgres:
     image: postgres:16
     container_name: waiter_ai_db
-    ports:
-      - "5432:5432"
     environment:
       POSTGRES_USER: waiter
       POSTGRES_PASSWORD: waiter123
@@ -13,6 +11,44 @@ services:
       - waiter_ai_data:/var/lib/postgresql/data
     restart: unless-stopped
 
+  hub:
+    build:
+      context: ..
+      dockerfile: apps/hub/Dockerfile
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      NEXT_TELEMETRY_DISABLED: "1"
+    expose:
+      - "3000"
+    restart: unless-stopped
+
+  kronos3d:
+    build:
+      context: ..
+      dockerfile: apps/kronos3d/Dockerfile
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      NEXT_TELEMETRY_DISABLED: "1"
+    expose:
+      - "3000"
+    restart: unless-stopped
+
+  waiter-ai:
+    build:
+      context: ..
+      dockerfile: apps/waiter-ai/Dockerfile
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      NEXT_TELEMETRY_DISABLED: "1"
+      DATABASE_URL: "postgresql://waiter:waiter123@postgres:5432/waiter_ai"
+    depends_on:
+      - postgres
+    expose:
+      - "3000"
+    restart: unless-stopped
+
 volumes:
   waiter_ai_data:
-

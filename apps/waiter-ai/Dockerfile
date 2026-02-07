@@ -1,20 +1,19 @@
-FROM node:20-alpine AS deps
-WORKDIR /app
-
-COPY package.json ./
-RUN npm install
-
 FROM node:20-alpine AS build
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-RUN npm run build
+WORKDIR /repo
 
-FROM node:20-alpine AS runner
-WORKDIR /app
+COPY package.json package-lock.json turbo.json ./
+COPY apps ./apps
+COPY packages ./packages
+
+RUN npm ci
+
+# Prisma (si tienes prisma/schema.prisma en waiter-ai)
+RUN npx prisma generate --schema apps/waiter-ai/prisma/schema.prisma
+
+RUN npx turbo run build --filter=waiter-ai --no-daemon
+
 ENV NODE_ENV=production
+ENV PORT=3000
+EXPOSE 3000
 
-COPY --from=build /app ./
-
-EXPOSE 3002
-CMD ["npm","run","start"]
+CMD ["npm","run","start","--workspace=waiter-ai"]
