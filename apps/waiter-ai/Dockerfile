@@ -1,19 +1,9 @@
-FROM node:20-alpine AS build
-WORKDIR /repo
+# ... (todo tu build previo queda igual)
 
-COPY package.json package-lock.json turbo.json ./
-COPY apps ./apps
-COPY packages ./packages
-
-RUN npm ci
-
-# Prisma (si tienes prisma/schema.prisma en waiter-ai)
-RUN npx prisma generate --schema apps/waiter-ai/prisma/schema.prisma
-
-RUN npx turbo run build --filter=waiter-ai --no-daemon
-
+WORKDIR /repo/apps/waiter-ai
 ENV NODE_ENV=production
-ENV PORT=3000
-EXPOSE 3000
+ENV HOSTNAME=0.0.0.0
+ENV PORT=3002
+EXPOSE 3002
 
-CMD ["npm","run","start","--workspace=waiter-ai"]
+CMD ["sh", "-c", "npx prisma migrate deploy --schema prisma/schema.prisma && node .next/standalone/server.js"]

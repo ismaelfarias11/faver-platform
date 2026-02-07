@@ -1,15 +1,9 @@
-FROM node:20-alpine AS build
-WORKDIR /repo
+# ... (todo tu build previo queda igual)
 
-COPY package.json package-lock.json turbo.json ./
-COPY apps ./apps
-COPY packages ./packages
-
-RUN npm ci
-RUN npx turbo run build --filter=hub --no-daemon
-
+WORKDIR /repo/apps/hub
 ENV NODE_ENV=production
+ENV HOSTNAME=0.0.0.0
 ENV PORT=3000
 EXPOSE 3000
 
-CMD ["npm","run","start","--workspace=hub"]
+CMD ["node", ".next/standalone/server.js"]

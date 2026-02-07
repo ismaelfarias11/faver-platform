@@ -1,15 +1,9 @@
-FROM node:20-alpine AS build
-WORKDIR /repo
+# ... (todo tu build previo queda igual)
 
-COPY package.json package-lock.json turbo.json ./
-COPY apps ./apps
-COPY packages ./packages
-
-RUN npm ci
-RUN npx turbo run build --filter=kronos3d --no-daemon
-
+WORKDIR /repo/apps/kronos3d
 ENV NODE_ENV=production
-ENV PORT=3000
-EXPOSE 3000
+ENV HOSTNAME=0.0.0.0
+ENV PORT=3001
+EXPOSE 3001
 
-CMD ["npm","run","start","--workspace=kronos3d"]
+CMD ["node", ".next/standalone/server.js"]
