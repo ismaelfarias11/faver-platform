@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 export default function PilotForm() {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState<null | "ok" | "error">(null);
@@ -9,95 +11,45 @@ export default function PilotForm() {
     e.preventDefault();
     setSending(true);
     setSent(null);
-    setMsg("");
 
-    const form = new FormData(e.currentTarget);
-    const payload = Object.fromEntries(form.entries());
+    try {
+      const res = await fetch("/api/pilot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ msg }),
+      });
 
-    const res = await fetch("/api/pilot", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+      if (!res.ok) throw new Error("Request failed");
 
-    if (!res.ok) {
-      const text = await res.text();
+      setSent("ok");
+      setMsg("");
+    } catch (err) {
       setSent("error");
-      setMsg(text || "No se pudo enviar. Intenta nuevamente.");
+    } finally {
       setSending(false);
-      return;
     }
-
-    setSent("ok");
-    setMsg("Solicitud enviada. Te contactaremos pronto.");
-    e.currentTarget.reset();
-    setSending(false);
   }
 
   return (
-    
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        alert("Demo: formulario enviado. Luego lo conectamos a backend (API / CRM / WhatsApp).");
-      }}
-    >
-      <div className="formGrid">
-        <div className="field">
-          <label className="label">Nombre</label>
-          <input className="input" name="name" placeholder="Ej: Juan Pérez" required />
-        </div>
+    <form onSubmit={onSubmit} className="flex flex-col gap-3">
+      <textarea
+        value={msg}
+        onChange={(e) => setMsg(e.target.value)}
+        placeholder="Escribe tu mensaje..."
+        className="w-full rounded border p-3"
+        rows={4}
+      />
 
-        <div className="field">
-          <label className="label">Restaurante / Local</label>
-          <input className="input" name="restaurant" placeholder="Ej: La Esquina" required />
-        </div>
+      <button
+        type="submit"
+        disabled={sending || msg.trim().length === 0}
+        className="rounded border px-4 py-2"
+      >
+        {sending ? "Enviando..." : "Enviar"}
+      </button>
 
-        <div className="field">
-          <label className="label">WhatsApp</label>
-          <input className="input" name="whatsapp" placeholder="+56 9 1234 5678" required />
-        </div>
-
-        <div className="field">
-          <label className="label">Ciudad</label>
-          <input className="input" name="city" placeholder="Ej: Santiago" />
-        </div>
-
-        <div className="field">
-          <label className="label">Tipo de local</label>
-          <select className="select" name="type" defaultValue="restaurante">
-            <option value="restaurante">Restaurante</option>
-            <option value="cafeteria">Cafetería</option>
-            <option value="bar">Bar / Pub</option>
-            <option value="fastfood">Fast food</option>
-            <option value="otro">Otro</option>
-          </select>
-        </div>
-
-        <div className="field">
-          <label className="label">Mesas aprox.</label>
-          <input className="input" name="tables" placeholder="Ej: 18" />
-        </div>
-
-        <div className="field" style={{ gridColumn: "1 / -1" }}>
-          <label className="label">Mensaje</label>
-          <textarea
-            className="textarea"
-            name="message"
-            placeholder="Cuéntanos tu carta, horarios, volumen y qué te gustaría automatizar."
-          />
-        </div>
-      </div>
-
-      <div className="formFoot">
-        <p className="smallNote">
-          No compartimos tus datos. Esto es solo para coordinar una demo y evaluar el piloto.
-        </p>
-
-        <button className="btnPrimaryLg" type="submit">
-          Enviar solicitud
-        </button>
-      </div>
+      {sent === "ok" && <p className="text-sm">✅ Enviado</p>}
+      {sent === "error" && <p className="text-sm">❌ Error al enviar</p>}
     </form>
   );
 }
