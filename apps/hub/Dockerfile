@@ -1,9 +1,38 @@
-# ... (todo tu build previo queda igual)
+# =========
+# deps
+# =========
+FROM node:20-alpine AS deps
+WORKDIR /repo
 
-WORKDIR /repo/apps/hub
+COPY package.json package-lock.json turbo.json ./
+COPY apps ./apps
+COPY packages ./packages
+
+RUN npm ci
+
+# =========
+# build
+# =========
+FROM node:20-alpine AS builder
+WORKDIR /repo
+
+COPY --from=deps /repo /repo
+RUN npx turbo run build --filter=hub --no-daemon
+
+# =========
+# runner (standalone)
+# =========
+FROM node:20-alpine AS runner
+WORKDIR /app
+
 ENV NODE_ENV=production
 ENV HOSTNAME=0.0.0.0
 ENV PORT=3000
-EXPOSE 3000
 
-CMD ["node", ".next/standalone/server.js"]
+# Copiamos el output standalone
+COPY --from=builder /repo/apps/hub/.next/standalone ./
+COPY --from=builder /repo/apps/hub/.next/static ./.next/static
+COPY --from=builder /repo/apps/hub/public ./public
+
+EXPOSE 3000
+CMD ["node", "server.js"]
